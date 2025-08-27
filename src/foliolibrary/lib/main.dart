@@ -1,8 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:foliolibrary/services/database.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'models/folio.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
   runApp(const MyApp());
 }
 
@@ -36,16 +46,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   void initState() {
-      super.initState();
-      // Fetch the folios from the database when the widget is first created
-      _folios = DatabaseService.instance.getAllFolios();
+    super.initState();
+    // Fetch the folios from the database when the widget is first created
+    _folios = DatabaseService.instance.getAllFolios();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Library'),
-      ),
+      appBar: AppBar(title: const Text('My Library')),
       body: FutureBuilder<List<Folio>>(
         future: _folios,
         builder: (context, snapshot) {
@@ -79,10 +88,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      folio.title,
-                      textAlign: TextAlign.center,
-                    ),
+                    child: Text(folio.title, textAlign: TextAlign.center),
                   ),
                 ),
               );
