@@ -1,5 +1,10 @@
 // lib/services/database.dart
 import 'dart:io';
+import 'package:foliolibrary/models/folio.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+
 
 class DatabaseService {
     // Singleton instance

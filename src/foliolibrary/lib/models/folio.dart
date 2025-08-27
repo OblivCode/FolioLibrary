@@ -1,5 +1,7 @@
 // lib/models/folio.dart
 
+import 'dart:convert';
+
 enum FolioType {
     fixed, // e.g. pdf,
     reflowable // e.g. epub
@@ -80,14 +82,14 @@ class Folio {
             'coverImage': coverImage,
             'description': description,
             'seriesInfoJson': seriesInfo != null ? jsonEncode(seriesInfo!.toMap()) : null,
-            'layoutType': layoutType,
+            'type': type,
             'progressJson': jsonEncode(progress),
             'dateAdded': dateAdded.toIso8601String(),
             'lastOpened': lastOpened.toIso8601String(),
             'shelfIDsJson': jsonEncode(shelfIDs),
             'tagsJson': jsonEncode(tags),
             'rating': rating,
-            'bookmarksJson': jsonEncode(bookmarks.map((b) => b.toMap()).toList()),
+            'bookmarksJson': jsonEncode(bookmarks?.map((b) => b.toMap()).toList() ?? []),
         };
     }
 
@@ -101,7 +103,7 @@ class Folio {
             coverImage: map['coverImage'],
             description: map['description'],
             seriesInfo: map['seriesInfoJson'] != null ? SeriesInfo.fromMap(jsonDecode(map['seriesInfoJson'])) : null,
-            layoutType: map['layoutType'],
+            type: map['type'],
             progress: jsonDecode(map['progressJson']),
             dateAdded: DateTime.parse(map['dateAdded']),
             lastOpened: DateTime.parse(map['lastOpened']),
