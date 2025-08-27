@@ -3,7 +3,7 @@ import 'dart:io';
 
 class DatabaseService {
     // Singleton instance
-    static final DatabaseService _instance = DatabaseService._privateConstructor();
+    static final DatabaseService instance = DatabaseService._privateConstructor();
     // Private constructor
     DatabaseService._privateConstructor();
 
@@ -46,4 +46,23 @@ class DatabaseService {
             )
         ''');
     }
+
+    Future<void> createFolio(Folio folio) async {
+        final db = await instance.database;
+        await db.insert(
+            'folios',
+            folio.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace, // Replace if the ID already exists
+        );
+    }
+
+    Future<List<Folio>> getAllFolios() async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query('folios');
+
+    // Convert the List<Map<String, dynamic>> into a List<Folio>.
+    return List.generate(maps.length, (i) {
+      return Folio.fromMap(maps[i]);
+    });
+  }
 }
